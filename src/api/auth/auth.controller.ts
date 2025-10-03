@@ -6,7 +6,6 @@ import {
   Body,
   UseFilters,
   Inject,
-  Injectable,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -18,7 +17,6 @@ import { JwtService } from '@nestjs/jwt';
 import type { Cache } from 'cache-manager';
 import { encrypt } from '@/lib/utils';
 
-@Injectable()
 @Controller('auth')
 export class AuthController {
   constructor(
