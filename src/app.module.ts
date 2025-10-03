@@ -6,7 +6,11 @@ import KeyvRedis from '@keyv/redis';
 import { Keyv } from 'keyv';
 import { CacheableMemory } from 'cacheable';
 
-import { I18nModule, QueryResolver, AcceptLanguageResolver } from 'nestjs-i18n';
+import {
+  I18nModule,
+  AcceptLanguageResolver,
+  HeaderResolver,
+} from 'nestjs-i18n';
 import * as path from 'node:path';
 
 import { AppController } from './api/app/app.controller';
@@ -14,8 +18,6 @@ import { AppService } from './api/app/app.service';
 
 import { AuthController } from './api/auth/auth.controller';
 import { AuthService } from './api/auth/auth.service';
-
-console.log('__dirname', __dirname);
 
 @Module({
   imports: [
@@ -27,7 +29,7 @@ console.log('__dirname', __dirname);
         watch: true,
       },
       resolvers: [
-        { use: QueryResolver, options: ['lang'] },
+        new HeaderResolver(['x-custom-lang']),
         AcceptLanguageResolver,
       ],
     }),
@@ -37,9 +39,11 @@ console.log('__dirname', __dirname);
         return {
           stores: [
             new Keyv({
-              store: new CacheableMemory({ ttl: 60000, lruSize: 5000 }),
+              store: new CacheableMemory({ ttl: '1h', lruSize: 5000 }),
             }),
-            new KeyvRedis('redis://localhost:6379'),
+            new KeyvRedis(
+              `redis://${process.env.REDIS_HOST!}:${+process.env.REDIS_PORT!}`,
+            ),
           ],
         };
       },

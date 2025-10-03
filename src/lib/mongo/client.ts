@@ -18,8 +18,9 @@ export async function connect() {
     await db.command({ ping: 1 });
     console.log('db connection success');
   } catch {
-    console.error('db connection failed');
     await client.close();
+
+    throw new Error('Please check your DB connection');
   }
 }
 
