@@ -1,0 +1,7 @@
+{
+  "signup": {
+    "user": {
+      "exists": "User allready exists"
+    }
+  }
+}
