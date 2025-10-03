@@ -34,24 +34,25 @@ export class AuthController {
     @Body() body: SignInDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    let token: string = '';
     const user = await this.authService.signin(body);
     if (!user) {
       res.status(HttpStatus.UNAUTHORIZED);
 
       return {
-        status: false,
         message: this.i18n.t('custom.signup.user.not_found'),
       };
     }
 
     const id = user._id!.toString();
-    const jwtToken = await this.jwt.signAsync({ id });
-    await this.cacheManager.set(id, jwtToken);
-    token = encrypt(jwtToken);
+    let jwtToken = await this.cacheManager.get<string | undefined>(id);
+    if (!jwtToken) {
+      jwtToken = await this.jwt.signAsync({ id });
+      await this.cacheManager.set(id, jwtToken);
+    }
+
+    const token = encrypt(jwtToken);
 
     return {
-      status: true,
       token,
     };
   }
