@@ -1,5 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { CacheModule } from '@nestjs/cache-manager';
+import KeyvRedis from '@keyv/redis';
+import { Keyv } from 'keyv';
+import { CacheableMemory } from 'cacheable';
+
 import { I18nModule, QueryResolver, AcceptLanguageResolver } from 'nestjs-i18n';
 import * as path from 'node:path';
 
@@ -24,6 +30,19 @@ console.log('__dirname', __dirname);
         { use: QueryResolver, options: ['lang'] },
         AcceptLanguageResolver,
       ],
+    }),
+    JwtModule.register({ secret: process.env.JWT_SECRET }),
+    CacheModule.registerAsync({
+      useFactory: () => {
+        return {
+          stores: [
+            new Keyv({
+              store: new CacheableMemory({ ttl: 60000, lruSize: 5000 }),
+            }),
+            new KeyvRedis('redis://localhost:6379'),
+          ],
+        };
+      },
     }),
   ],
   controllers: [AppController, AuthController],

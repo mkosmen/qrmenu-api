@@ -1,7 +1,8 @@
 {
   "signup": {
     "user": {
-      "exists": "User allready exists"
+      "exists": "User allready exists",
+      "not_found": "User not found"
     }
   }
 }

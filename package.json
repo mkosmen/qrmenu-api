@@ -20,11 +20,15 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@keyv/redis": "^5.1.2",
+    "@nestjs/cache-manager": "^3.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/platform-express": "^11.0.1",
+    "cache-manager": "^7.2.3",
+    "cacheable": "^2.0.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "module-alias": "^2.2.3",
