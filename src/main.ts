@@ -11,11 +11,13 @@ import {
 } from '@nestjs/common';
 import { I18nValidationPipe, I18nValidationExceptionFilter } from 'nestjs-i18n';
 import { AppModule } from './app.module';
-import { connect } from './lib/mongo/client';
 
 async function bootstrap() {
-  await connect();
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: ['http://localhost:3000'],
+    credentials: true,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

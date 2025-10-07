@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { User } from '@/lib/types';
-import { getDb } from '@/lib/mongo/client';
 import { decrypt, encrypt } from '@/lib/utils';
 import SignInDto from '@/dto/SignInDto';
 import SignUpDto from '@/dto/SignUpDto';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly i18n: I18nService) {}
+  constructor(
+    private readonly i18n: I18nService,
+    private readonly usersService: UsersService,
+  ) {}
 
   async signin(dto: SignInDto): Promise<User | null> {
-    const user = await getDb()
-      .collection<User>('users')
-      .findOne({ email: dto.email });
+    const user = await this.usersService.getByEmail(dto.email);
 
     if (user) {
       const decryptedPass = decrypt(user.password);
@@ -29,23 +30,22 @@ export class AuthService {
   }
 
   async signup(dto: SignUpDto): Promise<{ status: boolean; message?: string }> {
-    const coll = getDb().collection<User>('users');
-    const dbUser = await coll.findOne({ email: dto.email });
+    const user = await this.usersService.getByEmail(dto.email);
 
-    if (dbUser) {
+    if (user) {
       return {
         status: false,
         message: this.i18n.t('custom.signup.user.exists'),
       };
     }
 
-    await coll.insertOne({
+    const status = await this.usersService.add({
       ...dto,
       password: encrypt(dto.password),
     });
 
     return {
-      status: true,
+      status,
     };
   }
 }

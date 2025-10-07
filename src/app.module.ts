@@ -1,27 +1,30 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  OnApplicationShutdown,
+  OnModuleInit,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
 import { CacheModule } from '@nestjs/cache-manager';
+import { JwtModule } from '@nestjs/jwt';
 import KeyvRedis from '@keyv/redis';
 import { Keyv } from 'keyv';
 import { CacheableMemory } from 'cacheable';
-
 import {
   I18nModule,
   AcceptLanguageResolver,
   HeaderResolver,
 } from 'nestjs-i18n';
 import * as path from 'node:path';
-
-import { AppController } from './api/app/app.controller';
-import { AppService } from './api/app/app.service';
-
-import { AuthController } from './api/auth/auth.controller';
-import { AuthService } from './api/auth/auth.service';
-
+import { connect, client } from './lib/mongo/client';
+import { AuthMiddleware } from './common/middleware/auth.middleware';
+import { AuthModule } from './api/auth/auth.module';
+import { UsersModule } from './api/users/users.module';
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
@@ -33,8 +36,8 @@ import { AuthService } from './api/auth/auth.service';
         AcceptLanguageResolver,
       ],
     }),
-    JwtModule.register({ secret: process.env.JWT_SECRET }),
     CacheModule.registerAsync({
+      isGlobal: true,
       useFactory: () => {
         return {
           stores: [
@@ -48,8 +51,45 @@ import { AuthService } from './api/auth/auth.service';
         };
       },
     }),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      global: true,
+    }),
+    AuthModule,
+    UsersModule,
   ],
-  controllers: [AppController, AuthController],
-  providers: [AppService, AuthService],
+  exports: [JwtModule],
 })
-export class AppModule {}
+export class AppModule
+  implements OnApplicationShutdown, OnModuleInit, NestModule
+{
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .exclude(
+        { path: 'auth/signin', method: RequestMethod.POST },
+        { path: 'auth/signup', method: RequestMethod.POST },
+      )
+      .forRoutes('*');
+  }
+
+  onModuleInit() {
+    connect()
+      .then(() => {
+        console.log('db connection success');
+      })
+      .catch((e) => {
+        console.log('db connection error', e);
+      });
+  }
+  onApplicationShutdown() {
+    client
+      .close()
+      .then(() => {
+        console.log('db connection closed success');
+      })
+      .catch((e) => {
+        console.log('db connection closed error', e);
+      });
+  }
+}

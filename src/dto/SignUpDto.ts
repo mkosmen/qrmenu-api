@@ -17,5 +17,6 @@ export default class SignUpDto {
   password: string;
 
   @IsEmail()
+  @MaxLength(127)
   email: string;
 }

@@ -3,7 +3,7 @@ import { HOST, DB } from '../constant';
 
 let db: Db;
 
-const client = new MongoClient(HOST, {
+export const client = new MongoClient(HOST, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
