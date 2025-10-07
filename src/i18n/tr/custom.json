@@ -4,5 +4,8 @@
       "exists": "Kullanıcı zaten kayıtlı",
       "not_found": "Kullanıcı bulunamadı"
     }
+  },
+  "company": {
+    "exists": "Bu firma adını zaten kullanıyorsunuz"
   }
 }

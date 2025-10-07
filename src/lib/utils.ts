@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import slugify from 'slugify';
 const algorithm = 'aes-256-cbc';
 const secretKey = process.env.SECRET_KEY || 'test';
 
@@ -32,4 +33,8 @@ export function decrypt(data: string) {
   let decrypted = decipher.update(encrypted, 'hex', 'utf-8');
   decrypted += decipher.final('utf-8');
   return decrypted;
+}
+
+export function slugger(str: string) {
+  return slugify(str, { lower: true });
 }

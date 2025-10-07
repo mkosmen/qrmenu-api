@@ -5,12 +5,13 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { AuthMiddleware } from './common/middleware/auth.middleware';
+import { CoreModules } from './common/core.modules';
 import { AuthModule } from './api/auth/auth.module';
 import { UsersModule } from './api/users/users.module';
-import { CoreModules } from './common/core.modules';
+import { CompanyModule } from './api/company/company.module';
 
 @Module({
-  imports: [CoreModules, AuthModule, UsersModule],
+  imports: [CoreModules, AuthModule, UsersModule, CompanyModule],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
