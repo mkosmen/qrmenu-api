@@ -1,9 +1,7 @@
 import {
-  MiddlewareConsumer,
   Module,
+  MiddlewareConsumer,
   NestModule,
-  OnApplicationShutdown,
-  OnModuleInit,
   RequestMethod,
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -18,10 +16,11 @@ import {
   HeaderResolver,
 } from 'nestjs-i18n';
 import * as path from 'node:path';
-import { connect, client } from './lib/mongo/client';
 import { AuthMiddleware } from './common/middleware/auth.middleware';
 import { AuthModule } from './api/auth/auth.module';
 import { UsersModule } from './api/users/users.module';
+import { MongoDbModule } from './common/mongo/mongodb.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -55,14 +54,12 @@ import { UsersModule } from './api/users/users.module';
       secret: process.env.JWT_SECRET,
       global: true,
     }),
+    MongoDbModule,
     AuthModule,
     UsersModule,
   ],
-  exports: [JwtModule],
 })
-export class AppModule
-  implements OnApplicationShutdown, OnModuleInit, NestModule
-{
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
@@ -71,25 +68,5 @@ export class AppModule
         { path: 'auth/signup', method: RequestMethod.POST },
       )
       .forRoutes('*');
-  }
-
-  onModuleInit() {
-    connect()
-      .then(() => {
-        console.log('db connection success');
-      })
-      .catch((e) => {
-        console.log('db connection error', e);
-      });
-  }
-  onApplicationShutdown() {
-    client
-      .close()
-      .then(() => {
-        console.log('db connection closed success');
-      })
-      .catch((e) => {
-        console.log('db connection closed error', e);
-      });
   }
 }

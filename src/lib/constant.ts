@@ -1,2 +1,2 @@
-export const HOST = 'mongodb://127.0.0.1:27017/qrmenu';
-export const DB = 'admin';
+export const MONGODB_PROVIDER = 'MONGO_DB';
+export const MONGODB_URI_ENV_KEY = 'MONGODB_URI';
