@@ -17,7 +17,7 @@ export class AuthService {
     const user = await this.usersService.getByEmail(dto.email);
 
     if (user) {
-      const decryptedPass = decrypt(user.password);
+      const decryptedPass = decrypt(user.password!);
 
       const result = decryptedPass === dto.password;
 

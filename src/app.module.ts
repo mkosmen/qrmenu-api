@@ -17,9 +17,9 @@ import {
 } from 'nestjs-i18n';
 import * as path from 'node:path';
 import { AuthMiddleware } from './common/middleware/auth.middleware';
+import { MongoDbModule } from './common/mongo/mongodb.module';
 import { AuthModule } from './api/auth/auth.module';
 import { UsersModule } from './api/users/users.module';
-import { MongoDbModule } from './common/mongo/mongodb.module';
 
 @Module({
   imports: [

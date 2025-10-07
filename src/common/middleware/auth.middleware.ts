@@ -20,12 +20,18 @@ export class AuthMiddleware implements NestMiddleware {
   ) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
-    const xToken = req.headers['x-token']?.toString();
+    const xToken = <string | undefined>req.headers['x-token'];
     if (!xToken) {
       throw new UnauthorizedException();
     }
 
-    const token = decrypt(xToken);
+    let token: string | undefined;
+    try {
+      token = decrypt(xToken);
+    } catch {
+      throw new UnauthorizedException();
+    }
+
     const { email } = await this.jwt.verifyAsync<{ email: string }>(token);
 
     const user = await this.usersService.getByEmail(email);
