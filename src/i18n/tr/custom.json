@@ -6,6 +6,8 @@
     }
   },
   "company": {
-    "exists": "Bu firma adını zaten kullanıyorsunuz"
+    "exists": "Bu firma adını zaten kullanıyorsunuz",
+    "not_found": "Firma kaydı bulunamadı",
+    "max_count": "En fazla {count} adet firma ekleyebilirsiniz. Yeterli sayıya ulaştınız"
   }
 }

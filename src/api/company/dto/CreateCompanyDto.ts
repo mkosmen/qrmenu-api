@@ -1,8 +1,3 @@
-import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import CommonCompanyDto from './CommonCompanyDto';
 
-export default class CreateCompanyDto {
-  @MaxLength(63)
-  @MinLength(5)
-  @IsNotEmpty()
-  name: string;
-}
+export default class CreateCompanyDto extends CommonCompanyDto {}
