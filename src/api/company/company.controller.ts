@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Req,
-  Res,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { CompanyService } from './company.service';
@@ -17,6 +16,7 @@ import { slugger } from '@/lib/utils';
 import { I18nService } from 'nestjs-i18n';
 import { MAX_COMPANY_COUNT } from '@/lib/constant';
 import UpdateCompanyDto from './dto/UpdateCompanyDto';
+import { ObjectId } from 'mongodb';
 
 @Controller('company')
 export class CompanyController {
@@ -25,7 +25,7 @@ export class CompanyController {
     private readonly i18n: I18nService,
   ) {}
 
-  async checkCompanyCount(props: { user: User; res: Response }) {
+  async checkCompanyCount(props: { user: User }) {
     const totalCompanyCount = await this.companyService.getOwnCount(
       props.user._id!,
     );
@@ -43,11 +43,12 @@ export class CompanyController {
   async checkAnyCompanyHasSlug(props: {
     slug: string;
     user: User;
-    res: Response;
+    exceptId?: ObjectId;
   }) {
     const hasAny = await this.companyService.hasAny({
       slug: props.slug,
       userId: props.user._id!,
+      exceptId,
     });
 
     if (hasAny) {
@@ -58,14 +59,14 @@ export class CompanyController {
   }
 
   @Post()
-  async create(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async create(@Req() req: Request) {
     const dto = <CreateCompanyDto>req.body;
     const user = <User>req.user;
 
-    await this.checkCompanyCount({ res, user });
+    await this.checkCompanyCount({ user });
 
     const slug = slugger(dto.name);
-    await this.checkAnyCompanyHasSlug({ slug, res, user });
+    await this.checkAnyCompanyHasSlug({ slug, user });
 
     const result = await this.companyService.create({
       ...dto,
@@ -91,13 +92,13 @@ export class CompanyController {
   }
 
   @Patch(':id')
-  async update(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async update(@Req() req: Request) {
     const dto = <UpdateCompanyDto>req.body;
     const user = <User>req.user;
     const company = <Company>req['company'];
 
     const slug = slugger(dto.name);
-    await this.checkAnyCompanyHasSlug({ slug, res, user });
+    await this.checkAnyCompanyHasSlug({ slug, user, exceptId: company._id });
 
     const { acknowledged } = await this.companyService.update(company._id!, {
       ...dto,

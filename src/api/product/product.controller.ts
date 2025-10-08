@@ -4,11 +4,13 @@ import {
   Body,
   ConflictException,
   Controller,
+  Get,
   NotFoundException,
   Post,
+  Put,
   Req,
 } from '@nestjs/common';
-import { User } from '@/lib/types';
+import { Product, User } from '@/lib/types';
 import { ProductService } from './product.service';
 import { CategoryService } from '@/api/category/category.service';
 import CreateProductDto from './dto/CreateProductDto';
@@ -16,6 +18,7 @@ import { slugger } from '@/lib/utils';
 import { I18nService } from 'nestjs-i18n';
 import { MAX_PRODUCT_COUNT } from '@/lib/constant';
 import { ObjectId } from 'mongodb';
+import UpdateProductDto from './dto/UpdateProductDto';
 
 @Controller('product')
 export class ProductController {
@@ -51,10 +54,15 @@ export class ProductController {
     }
   }
 
-  async checkAnyProductHasSlug(props: { slug: string; user: User }) {
+  async checkAnyProductHasSlug(props: {
+    slug: string;
+    user: User;
+    exceptId?: ObjectId;
+  }) {
     const hasAny = await this.productService.hasAny({
       slug: props.slug,
       userId: props.user._id!,
+      exceptId: props.exceptId,
     });
 
     if (hasAny) {
@@ -66,13 +74,27 @@ export class ProductController {
     }
   }
 
+  getCategoryIdAsObjectId(categoryId: any) {
+    try {
+      return new ObjectId(String(categoryId));
+    } catch {
+      throw new NotFoundException({
+        message: this.i18n.t('custom.exceptions.not_found', {
+          args: { prop: this.i18n.t('custom.category') },
+        }),
+      });
+    }
+  }
+
   @Post()
   async create(@Body() dto: CreateProductDto, @Req() req: Request) {
     const user = <User>req.user;
 
     await this.checkProductCount({ user });
+
+    const categoryId = this.getCategoryIdAsObjectId(dto.categoryId);
     await this.checkCategoryExists({
-      _id: new ObjectId(dto.categoryId),
+      _id: categoryId,
       userId: user._id!,
     });
 
@@ -81,12 +103,43 @@ export class ProductController {
 
     const result = await this.productService.create({
       ...dto,
-      categoryId: new ObjectId(dto.categoryId),
+      categoryId,
       active: Boolean(dto.active),
       userId: user._id!,
       slug,
     });
 
     return result.insertedId;
+  }
+
+  @Get(':id')
+  findOne(@Req() req: Request) {
+    return <Product>req['product'];
+  }
+
+  @Put(':id')
+  async update(@Req() req: Request) {
+    const dto = <UpdateProductDto>req.body;
+    const user = <User>req.user;
+    const product = <Product>req['product'];
+
+    const categoryId = this.getCategoryIdAsObjectId(dto.categoryId);
+
+    await this.checkCategoryExists({
+      _id: categoryId,
+      userId: user._id!,
+    });
+
+    const slug = slugger(dto.name);
+    await this.checkAnyProductHasSlug({ slug, user, exceptId: product._id! });
+
+    const { acknowledged } = await this.productService.update(product._id!, {
+      ...dto,
+      categoryId,
+      active: Boolean(dto.active),
+      slug,
+    });
+
+    return acknowledged;
   }
 }

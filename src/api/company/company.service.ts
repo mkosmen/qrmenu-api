@@ -13,10 +13,24 @@ export class CompanyService {
       .insertOne(company);
   }
 
-  async hasAny({ slug, userId }: { slug: string; userId: ObjectId }) {
+  async hasAny({
+    slug,
+    userId,
+    exceptId,
+  }: {
+    slug: string;
+    userId: ObjectId;
+    exceptId?: ObjectId;
+  }) {
+    const filter = { slug, userId };
+
+    if (exceptId) {
+      filter['_id'] = { $ne: exceptId };
+    }
+
     const result = await this.db
       .collection<Company>(COLLECTIONS.COMPANIES)
-      .countDocuments({ slug, userId }, { limit: 1 });
+      .countDocuments(filter, { limit: 1 });
 
     return result > 0;
   }

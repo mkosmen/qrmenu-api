@@ -8,7 +8,6 @@ import {
   Post,
   Req,
   Query,
-  Res,
 } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import type { Request, Response } from 'express';
@@ -26,7 +25,7 @@ export class CategoryController {
     private readonly i18n: I18nService,
   ) {}
 
-  async checkCategoryCount(props: { user: User; res: Response }) {
+  async checkCategoryCount(props: { user: User }) {
     const totalCategoryCount = await this.categoryService.getOwnCount(
       props.user._id!,
     );
@@ -42,11 +41,7 @@ export class CategoryController {
     }
   }
 
-  async checkAnyCategoryHasSlug(props: {
-    slug: string;
-    user: User;
-    res: Response;
-  }) {
+  async checkAnyCategoryHasSlug(props: { slug: string; user: User }) {
     const hasAny = await this.categoryService.hasAny({
       slug: props.slug,
       userId: props.user._id!,
@@ -64,14 +59,14 @@ export class CategoryController {
   }
 
   @Post()
-  async create(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async create(@Req() req: Request) {
     const dto = <CreateCategoryDto>req.body;
     const user = <User>req.user;
 
-    await this.checkCategoryCount({ res, user });
+    await this.checkCategoryCount({ user });
 
     const slug = slugger(dto.name);
-    await this.checkAnyCategoryHasSlug({ slug, res, user });
+    await this.checkAnyCategoryHasSlug({ slug, user });
 
     const result = await this.categoryService.create({
       ...dto,
@@ -116,13 +111,13 @@ export class CategoryController {
   }
 
   @Patch(':id')
-  async update(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async update(@Req() req: Request) {
     const dto = <UpdateCategoryDto>req.body;
     const user = <User>req.user;
     const category = <Category>req['category'];
 
     const slug = slugger(dto.name);
-    await this.checkAnyCategoryHasSlug({ slug, res, user });
+    await this.checkAnyCategoryHasSlug({ slug, user });
 
     const { acknowledged } = await this.categoryService.update(category._id!, {
       ...dto,
