@@ -14,25 +14,24 @@ import { CompanyService } from './company.service';
 import CreateCompanyDto from './dto/CreateCompanyDto';
 import { Company, User } from '@/lib/types';
 import { slugger } from '@/lib/utils';
-import { I18n, I18nContext } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 import { MAX_COMPANY_COUNT } from '@/lib/constant';
 import UpdateCompanyDto from './dto/UpdateCompanyDto';
 
 @Controller('company')
 export class CompanyController {
-  constructor(private readonly companyService: CompanyService) {}
+  constructor(
+    private readonly companyService: CompanyService,
+    private readonly i18n: I18nService,
+  ) {}
 
-  async checkCompanyCount(props: {
-    user: User;
-    res: Response;
-    i18n: I18nContext;
-  }) {
+  async checkCompanyCount(props: { user: User; res: Response }) {
     const totalCompanyCount = await this.companyService.getOwnCount(
       props.user._id!,
     );
     if (totalCompanyCount >= MAX_COMPANY_COUNT) {
       throw new BadRequestException({
-        message: props.i18n.t('custom.company.maxCount', {
+        message: this.i18n.t('custom.company.maxCount', {
           args: {
             count: MAX_COMPANY_COUNT,
           },
@@ -45,7 +44,6 @@ export class CompanyController {
     slug: string;
     user: User;
     res: Response;
-    i18n: I18nContext;
   }) {
     const hasAny = await this.companyService.hasAny({
       slug: props.slug,
@@ -54,24 +52,20 @@ export class CompanyController {
 
     if (hasAny) {
       throw new ConflictException({
-        message: props.i18n.t('custom.company.exists'),
+        message: this.i18n.t('custom.company.exists'),
       });
     }
   }
 
   @Post()
-  async create(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-    @I18n() i18n: I18nContext,
-  ) {
+  async create(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const dto = <CreateCompanyDto>req.body;
     const user = <User>req.user;
 
-    await this.checkCompanyCount({ res, user, i18n });
+    await this.checkCompanyCount({ res, user });
 
     const slug = slugger(dto.name);
-    await this.checkAnyCompanyHasSlug({ slug, res, user, i18n });
+    await this.checkAnyCompanyHasSlug({ slug, res, user });
 
     const result = await this.companyService.create({
       ...dto,
@@ -97,17 +91,13 @@ export class CompanyController {
   }
 
   @Patch(':id')
-  async update(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-    @I18n() i18n: I18nContext,
-  ) {
+  async update(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const dto = <UpdateCompanyDto>req.body;
     const user = <User>req.user;
     const company = <Company>req['company'];
 
     const slug = slugger(dto.name);
-    await this.checkAnyCompanyHasSlug({ slug, res, user, i18n });
+    await this.checkAnyCompanyHasSlug({ slug, res, user });
 
     const { acknowledged } = await this.companyService.update(company._id!, {
       ...dto,

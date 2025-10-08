@@ -1,18 +1,11 @@
 {
-  "signup": {
-    "user": {
-      "exists": "Kullanıcı zaten kayıtlı",
-      "not_found": "Kullanıcı bulunamadı"
-    }
-  },
-  "company": {
-    "exists": "Bu firma adını zaten kullanıyorsunuz",
-    "not_found": "Firma kaydı bulunamadı",
-    "max_count": "En fazla {count} adet firma ekleyebilirsiniz. Yeterli sayıya ulaştınız"
-  },
-  "category": {
-    "exists": "Bu kategori adını zaten kullanıyorsunuz",
-    "not_found": "Kategori bulunamadı",
-    "max_count": "En fazla {count} adet kategori ekleyebilirsiniz. Yeterli sayıya ulaştınız"
+  "user": "Kullanıcı",
+  "company": "Firma",
+  "category": "Kategori",
+  "product": "Ürün",
+  "exceptions": {
+    "exists": "Bu {prop} adını zaten kullanıyorsunuz",
+    "not_found": "{prop} kaydı bulunamadı",
+    "max_count": "En fazla {count} adet {prop} ekleyebilirsiniz. Yeterli sayıya ulaştınız"
   }
 }

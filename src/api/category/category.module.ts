@@ -11,6 +11,7 @@ import { CategoryMiddleware } from '@/common/middleware/category.middleware';
 @Module({
   controllers: [CategoryController],
   providers: [CategoryService],
+  exports: [CategoryService],
 })
 export class CategoryModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

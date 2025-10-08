@@ -10,7 +10,7 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { I18n, I18nContext } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 import type { Request, Response } from 'express';
 import { Category, User } from '@/lib/types';
 import { MAX_CATEGORY_COUNT } from '@/lib/constant';
@@ -21,20 +21,20 @@ import UpdateCategoryDto from './dto/UpdateCategoryDto';
 
 @Controller('category')
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(
+    private readonly categoryService: CategoryService,
+    private readonly i18n: I18nService,
+  ) {}
 
-  async checkCategoryCount(props: {
-    user: User;
-    res: Response;
-    i18n: I18nContext;
-  }) {
+  async checkCategoryCount(props: { user: User; res: Response }) {
     const totalCategoryCount = await this.categoryService.getOwnCount(
       props.user._id!,
     );
     if (totalCategoryCount >= MAX_CATEGORY_COUNT) {
       throw new BadRequestException({
-        message: props.i18n.t('custom.category.maxCount', {
+        message: this.i18n.t('custom.exception.max_count', {
           args: {
+            prop: this.i18n.t('custom.category'),
             count: MAX_CATEGORY_COUNT,
           },
         }),
@@ -46,7 +46,6 @@ export class CategoryController {
     slug: string;
     user: User;
     res: Response;
-    i18n: I18nContext;
   }) {
     const hasAny = await this.categoryService.hasAny({
       slug: props.slug,
@@ -55,24 +54,24 @@ export class CategoryController {
 
     if (hasAny) {
       throw new ConflictException({
-        message: props.i18n.t('custom.category.exists'),
+        message: this.i18n.t('custom.exception.exists', {
+          args: {
+            prop: this.i18n.t('custom.category'),
+          },
+        }),
       });
     }
   }
 
   @Post()
-  async create(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-    @I18n() i18n: I18nContext,
-  ) {
+  async create(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const dto = <CreateCategoryDto>req.body;
     const user = <User>req.user;
 
-    await this.checkCategoryCount({ res, user, i18n });
+    await this.checkCategoryCount({ res, user });
 
     const slug = slugger(dto.name);
-    await this.checkAnyCategoryHasSlug({ slug, res, user, i18n });
+    await this.checkAnyCategoryHasSlug({ slug, res, user });
 
     const result = await this.categoryService.create({
       ...dto,
@@ -117,17 +116,13 @@ export class CategoryController {
   }
 
   @Patch(':id')
-  async update(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-    @I18n() i18n: I18nContext,
-  ) {
+  async update(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const dto = <UpdateCategoryDto>req.body;
     const user = <User>req.user;
     const category = <Category>req['category'];
 
     const slug = slugger(dto.name);
-    await this.checkAnyCategoryHasSlug({ slug, res, user, i18n });
+    await this.checkAnyCategoryHasSlug({ slug, res, user });
 
     const { acknowledged } = await this.categoryService.update(category._id!, {
       ...dto,

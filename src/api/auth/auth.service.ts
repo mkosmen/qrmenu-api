@@ -35,7 +35,11 @@ export class AuthService {
     if (user) {
       return {
         status: false,
-        message: this.i18n.t('custom.signup.user.exists'),
+        message: this.i18n.t('custom.signup.exists', {
+          args: {
+            prop: this.i18n.t('custom.user'),
+          },
+        }),
       };
     }
 

@@ -27,3 +27,12 @@ export interface Category {
   userId: ObjectId;
   active: boolean;
 }
+
+export interface Product {
+  _id?: ObjectId;
+  name: string;
+  categoryId: ObjectId;
+  slug: string;
+  userId: ObjectId;
+  active: boolean;
+}
