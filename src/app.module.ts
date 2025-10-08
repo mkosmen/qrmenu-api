@@ -9,9 +9,16 @@ import { CoreModules } from './common/core.modules';
 import { AuthModule } from './api/auth/auth.module';
 import { UsersModule } from './api/users/users.module';
 import { CompanyModule } from './api/company/company.module';
+import { CategoryModule } from './api/category/category.module';
 
 @Module({
-  imports: [CoreModules, AuthModule, UsersModule, CompanyModule],
+  imports: [
+    CoreModules,
+    AuthModule,
+    UsersModule,
+    CompanyModule,
+    CategoryModule,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

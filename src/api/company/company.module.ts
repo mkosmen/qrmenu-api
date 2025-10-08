@@ -16,6 +16,10 @@ export class CompanyModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(CompanyMiddleware)
+      .exclude({
+        path: 'company/all',
+        method: RequestMethod.GET,
+      })
       .forRoutes({ path: 'company/:id', method: RequestMethod.ALL });
   }
 }

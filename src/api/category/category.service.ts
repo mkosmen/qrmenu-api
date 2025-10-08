@@ -1,21 +1,21 @@
 import { Db, ObjectId } from 'mongodb';
 import { COLLECTIONS, MONGODB_PROVIDER } from '@/lib/constant';
 import { Inject, Injectable } from '@nestjs/common';
-import { Company } from '@/lib/types';
+import { Category } from '@/lib/types';
 
 @Injectable()
-export class CompanyService {
+export class CategoryService {
   constructor(@Inject(MONGODB_PROVIDER) private readonly db: Db) {}
 
-  async create(company: Company) {
+  async create(category: Category) {
     return await this.db
-      .collection<Company>(COLLECTIONS.COMPANIES)
-      .insertOne(company);
+      .collection<Category>(COLLECTIONS.CATEGORIES)
+      .insertOne(category);
   }
 
   async hasAny({ slug, userId }: { slug: string; userId: ObjectId }) {
     const result = await this.db
-      .collection<Company>(COLLECTIONS.COMPANIES)
+      .collection<Category>(COLLECTIONS.CATEGORIES)
       .countDocuments({ slug, userId }, { limit: 1 });
 
     return result > 0;
@@ -23,36 +23,36 @@ export class CompanyService {
 
   async getOwnCount(userId: ObjectId) {
     return await this.db
-      .collection<Company>(COLLECTIONS.COMPANIES)
+      .collection<Category>(COLLECTIONS.CATEGORIES)
       .countDocuments({ userId });
   }
 
   async findAll(userId: ObjectId) {
     return await this.db
-      .collection<Company[]>(COLLECTIONS.COMPANIES)
+      .collection<Category[]>(COLLECTIONS.CATEGORIES)
       .find({ userId })
       .toArray();
   }
 
   async find(props: { userId: ObjectId; _id: ObjectId }) {
     return await this.db
-      .collection<Company>(COLLECTIONS.COMPANIES)
+      .collection<Category>(COLLECTIONS.CATEGORIES)
       .findOne(props);
   }
 
-  async remove(props: { userId: ObjectId; _id: ObjectId }) {
+  async remove(_id: ObjectId) {
     return await this.db
-      .collection<Company>(COLLECTIONS.COMPANIES)
-      .deleteOne(props);
+      .collection<Category>(COLLECTIONS.CATEGORIES)
+      .deleteOne({ _id });
   }
 
-  async update(_id: ObjectId, company: Company) {
-    return await this.db.collection<Company>(COLLECTIONS.COMPANIES).updateOne(
+  async update(_id: ObjectId, category: any) {
+    return await this.db.collection<any>(COLLECTIONS.CATEGORIES).updateOne(
       {
         _id,
       },
       {
-        $set: company,
+        $set: category,
       },
     );
   }

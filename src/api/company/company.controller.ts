@@ -1,8 +1,9 @@
 import {
+  BadRequestException,
+  ConflictException,
   Controller,
   Delete,
   Get,
-  HttpStatus,
   Patch,
   Post,
   Req,
@@ -30,15 +31,13 @@ export class CompanyController {
       props.user._id!,
     );
     if (totalCompanyCount >= MAX_COMPANY_COUNT) {
-      props.res.status(HttpStatus.BAD_REQUEST).send({
+      throw new BadRequestException({
         message: props.i18n.t('custom.company.maxCount', {
           args: {
             count: MAX_COMPANY_COUNT,
           },
         }),
       });
-
-      return;
     }
   }
 
@@ -54,11 +53,9 @@ export class CompanyController {
     });
 
     if (hasAny) {
-      props.res.status(HttpStatus.CONFLICT).send({
+      throw new ConflictException({
         message: props.i18n.t('custom.company.exists'),
       });
-
-      return;
     }
   }
 

@@ -19,3 +19,11 @@ export interface Company {
   slug: string;
   userId: ObjectId;
 }
+
+export interface Category {
+  _id?: ObjectId;
+  name: string;
+  slug: string;
+  userId: ObjectId;
+  active: boolean;
+}
