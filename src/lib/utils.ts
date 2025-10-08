@@ -1,5 +1,7 @@
 import crypto from 'node:crypto';
 import slugify from 'slugify';
+import { PAGINATION } from './constant';
+
 const algorithm = 'aes-256-cbc';
 const secretKey = process.env.SECRET_KEY || 'test';
 
@@ -37,4 +39,22 @@ export function decrypt(data: string) {
 
 export function slugger(str: string) {
   return slugify(str, { lower: true });
+}
+
+export function getPagination({
+  page,
+  limit,
+  total,
+}: {
+  page?: number;
+  limit?: number;
+  total: number;
+}) {
+  let _limit = Math.abs(Number(limit));
+  _limit = _limit < 1 ? PAGINATION.LIMIT : _limit;
+
+  const _page = Math.abs(Number(page));
+  const maxPage = Math.ceil(total / _limit);
+
+  return { page: _page, limit: _limit, maxPage };
 }

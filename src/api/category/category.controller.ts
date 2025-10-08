@@ -7,13 +7,14 @@ import {
   Patch,
   Post,
   Req,
+  Query,
   Res,
 } from '@nestjs/common';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import type { Request, Response } from 'express';
 import { Category, User } from '@/lib/types';
 import { MAX_CATEGORY_COUNT } from '@/lib/constant';
-import { slugger } from '@/lib/utils';
+import { getPagination, slugger } from '@/lib/utils';
 import { CategoryService } from './category.service';
 import CreateCategoryDto from './dto/CreateCategoryDto';
 import UpdateCategoryDto from './dto/UpdateCategoryDto';
@@ -86,10 +87,28 @@ export class CategoryController {
   }
 
   @Get('all')
-  async findAll(@Req() req: Request) {
+  async findAll(
+    @Req() req: Request,
+    @Query() query: { page?: number; limit?: number },
+  ) {
     const user = <User>req.user;
 
-    return await this.categoryService.findAll(user._id!);
+    const total = await this.categoryService.totalCount(user._id!);
+    const { maxPage, ...pagination } = getPagination({ ...query, total });
+
+    const categories = await this.categoryService.findAll({
+      userId: user._id!,
+      ...pagination,
+    });
+
+    return {
+      categories,
+      pagination: {
+        ...pagination,
+        total,
+        maxPage,
+      },
+    };
   }
 
   @Get(':id')

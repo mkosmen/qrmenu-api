@@ -1,5 +1,5 @@
 import { Db, ObjectId } from 'mongodb';
-import { COLLECTIONS, MONGODB_PROVIDER } from '@/lib/constant';
+import { COLLECTIONS, MONGODB_PROVIDER, PAGINATION } from '@/lib/constant';
 import { Inject, Injectable } from '@nestjs/common';
 import { Category } from '@/lib/types';
 
@@ -27,10 +27,24 @@ export class CategoryService {
       .countDocuments({ userId });
   }
 
-  async findAll(userId: ObjectId) {
+  async findAll({
+    userId,
+    page = PAGINATION.PAGE,
+    limit = PAGINATION.LIMIT,
+  }: {
+    userId: ObjectId;
+    page: number;
+    limit: number;
+  }) {
     return await this.db
       .collection<Category[]>(COLLECTIONS.CATEGORIES)
-      .find({ userId })
+      .find(
+        { userId },
+        {
+          limit,
+          skip: (page - 1) * limit,
+        },
+      )
       .toArray();
   }
 
@@ -55,5 +69,11 @@ export class CategoryService {
         $set: category,
       },
     );
+  }
+
+  async totalCount(userId: ObjectId) {
+    return await this.db
+      .collection<Category>(COLLECTIONS.CATEGORIES)
+      .countDocuments({ userId });
   }
 }
