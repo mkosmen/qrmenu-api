@@ -48,7 +48,7 @@ export class CompanyController {
     const hasAny = await this.companyService.hasAny({
       slug: props.slug,
       userId: props.user._id!,
-      exceptId,
+      exceptId: props.exceptId,
     });
 
     if (hasAny) {
