@@ -115,6 +115,32 @@ export class ProductController {
     return result.insertedId;
   }
 
+  @Get('all')
+  async findAll(
+    @Req() req: Request,
+    @Query() query: { page?: number; limit?: number },
+  ) {
+    console.log('GELDİM');
+    const user = <User>req.user;
+
+    const total = await this.productService.totalCount(user._id!);
+    const { maxPage, ...pagination } = getPagination({ ...query, total });
+
+    const products = await this.productService.findAll({
+      userId: user._id!,
+      ...pagination,
+    });
+
+    return {
+      products,
+      pagination: {
+        ...pagination,
+        total,
+        maxPage,
+      },
+    };
+  }
+
   @Get(':id')
   findOne(@Req() req: Request) {
     return <Product>req['product'];
@@ -165,30 +191,5 @@ export class ProductController {
     });
 
     return acknowledged;
-  }
-
-  @Get('all')
-  async findAll(
-    @Req() req: Request,
-    @Query() query: { page?: number; limit?: number },
-  ) {
-    const user = <User>req.user;
-
-    const total = await this.productService.totalCount(user._id!);
-    const { maxPage, ...pagination } = getPagination({ ...query, total });
-
-    const categories = await this.productService.findAll({
-      userId: user._id!,
-      ...pagination,
-    });
-
-    return {
-      categories,
-      pagination: {
-        ...pagination,
-        total,
-        maxPage,
-      },
-    };
   }
 }
