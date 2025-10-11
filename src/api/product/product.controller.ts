@@ -4,17 +4,20 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   Get,
   NotFoundException,
+  Patch,
   Post,
   Put,
+  Query,
   Req,
 } from '@nestjs/common';
 import { Product, User } from '@/lib/types';
 import { ProductService } from './product.service';
 import { CategoryService } from '@/api/category/category.service';
 import CreateProductDto from './dto/CreateProductDto';
-import { slugger } from '@/lib/utils';
+import { getPagination, slugger } from '@/lib/utils';
 import { I18nService } from 'nestjs-i18n';
 import { MAX_PRODUCT_COUNT } from '@/lib/constant';
 import { ObjectId } from 'mongodb';
@@ -141,5 +144,51 @@ export class ProductController {
     });
 
     return acknowledged;
+  }
+
+  @Delete(':id')
+  async remove(@Req() req: Request) {
+    const product = <Product>req['product'];
+
+    const { acknowledged } = await this.productService.remove(product._id!);
+
+    return acknowledged;
+  }
+
+  @Patch(':id/status')
+  async setStatus(@Req() req: Request) {
+    const dto = <{ active: boolean }>req.body;
+    const product = <Product>req['product'];
+
+    const { acknowledged } = await this.productService.update(product._id!, {
+      active: Boolean(dto.active),
+    });
+
+    return acknowledged;
+  }
+
+  @Get('all')
+  async findAll(
+    @Req() req: Request,
+    @Query() query: { page?: number; limit?: number },
+  ) {
+    const user = <User>req.user;
+
+    const total = await this.productService.totalCount(user._id!);
+    const { maxPage, ...pagination } = getPagination({ ...query, total });
+
+    const categories = await this.productService.findAll({
+      userId: user._id!,
+      ...pagination,
+    });
+
+    return {
+      categories,
+      pagination: {
+        ...pagination,
+        total,
+        maxPage,
+      },
+    };
   }
 }

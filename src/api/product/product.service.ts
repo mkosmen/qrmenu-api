@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Db, ObjectId } from 'mongodb';
-import { MONGODB_PROVIDER, COLLECTIONS } from '@/lib/constant';
+import { MONGODB_PROVIDER, COLLECTIONS, PAGINATION } from '@/lib/constant';
 import { Product } from '@/lib/types';
 
 @Injectable()
@@ -61,5 +61,26 @@ export class ProductService {
     return await this.db
       .collection(COLLECTIONS.PRODUCTS)
       .countDocuments({ userId });
+  }
+
+  async findAll({
+    userId,
+    page = PAGINATION.PAGE,
+    limit = PAGINATION.LIMIT,
+  }: {
+    userId: ObjectId;
+    page: number;
+    limit: number;
+  }) {
+    return await this.db
+      .collection<Product[]>(COLLECTIONS.PRODUCTS)
+      .find(
+        { userId },
+        {
+          limit,
+          skip: (page - 1) * limit,
+        },
+      )
+      .toArray();
   }
 }
