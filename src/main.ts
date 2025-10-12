@@ -20,7 +20,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-
   app.useGlobalFilters(
     new I18nValidationExceptionFilter({
       detailedErrors: true,
