@@ -8,6 +8,7 @@ import {
   Post,
   Req,
   Query,
+  Body,
 } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import type { Request } from 'express';
@@ -59,8 +60,7 @@ export class CategoryController {
   }
 
   @Post()
-  async create(@Req() req: Request) {
-    const dto = <CreateCategoryDto>req.body;
+  async create(@Req() req: Request, @Body() dto: CreateCategoryDto) {
     const user = <User>req.user;
 
     await this.checkCategoryCount({ user });
@@ -111,8 +111,7 @@ export class CategoryController {
   }
 
   @Patch(':id')
-  async update(@Req() req: Request) {
-    const dto = <UpdateCategoryDto>req.body;
+  async update(@Req() req: Request, @Body() dto: UpdateCategoryDto) {
     const user = <User>req.user;
     const category = <Category>req['category'];
 

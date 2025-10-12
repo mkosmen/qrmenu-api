@@ -147,8 +147,7 @@ export class ProductController {
   }
 
   @Put(':id')
-  async update(@Req() req: Request) {
-    const dto = <UpdateProductDto>req.body;
+  async update(@Body() dto: UpdateProductDto, @Req() req: Request) {
     const user = <User>req.user;
     const product = <Product>req['product'];
 

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Body,
   ConflictException,
   Controller,
   Delete,
@@ -59,8 +60,7 @@ export class CompanyController {
   }
 
   @Post()
-  async create(@Req() req: Request) {
-    const dto = <CreateCompanyDto>req.body;
+  async create(@Req() req: Request, @Body() dto: CreateCompanyDto) {
     const user = <User>req.user;
 
     await this.checkCompanyCount({ user });
@@ -92,8 +92,7 @@ export class CompanyController {
   }
 
   @Patch(':id')
-  async update(@Req() req: Request) {
-    const dto = <UpdateCompanyDto>req.body;
+  async update(@Req() req: Request, @Body() dto: UpdateCompanyDto) {
     const user = <User>req.user;
     const company = <Company>req['company'];
 

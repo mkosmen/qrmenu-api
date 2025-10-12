@@ -17,22 +17,31 @@ import { i18nValidationMessage } from 'nestjs-i18n';
 
 export default class CommonDiscountDto {
   @IsOptional()
-  @MaxLength(31)
-  @MinLength(1)
+  @MaxLength(31, {
+    message: i18nValidationMessage('validation.maxLength'),
+  })
+  @MinLength(1, {
+    message: i18nValidationMessage('validation.minLength'),
+  })
   @IsString({
-    // message: 'validation.isString',
-    message: i18nValidationMessage('validation.isString'),
+    message: 'validation.isString',
   })
   code: string;
 
   @IsOptional()
-  @Max(100)
-  @Min(0)
+  @Max(100, {
+    message: i18nValidationMessage('validation.max'),
+  })
+  @Min(0, {
+    message: i18nValidationMessage('validation.min'),
+  })
   @IsNumber()
   percentage: number;
 
   @IsOptional()
-  @Min(0)
+  @Min(0, {
+    message: i18nValidationMessage('validation.min'),
+  })
   @IsNumber()
   price: number;
 
@@ -47,18 +56,23 @@ export default class CommonDiscountDto {
   discount_type: string;
 
   @IsOptional()
-  @IsString()
+  @IsString({
+    message: 'validation.isString',
+  })
   material_id: ObjectId;
 
   @IsOptional()
-  @IsDate()
+  @IsDate({
+    message: 'validation.isDate',
+  })
   started_at: Date;
 
   @IsOptional()
-  @IsDate()
+  @IsDate({
+    message: 'validation.isDate',
+  })
   finished_at: Date;
 
   @IsOptional()
-  @IsBoolean()
   active: boolean;
 }
