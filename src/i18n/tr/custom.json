@@ -3,9 +3,11 @@
   "company": "Firma",
   "category": "Kategori",
   "product": "Ürün",
+  "discount": "İndirim",
   "exceptions": {
     "exists": "Bu {prop} adını zaten kullanıyorsunuz",
     "not_found": "{prop} kaydı bulunamadı",
-    "max_count": "En fazla {count} adet {prop} ekleyebilirsiniz. Yeterli sayıya ulaştınız"
+    "max_count": "En fazla {count} adet {prop} ekleyebilirsiniz. Yeterli sayıya ulaştınız",
+    "max_active_count": "En fazla {count} adet {prop} aktif olarak kullanılabilir. Yeterli sayıya ulaştınız"
   }
 }

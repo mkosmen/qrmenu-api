@@ -4,11 +4,6 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 import { NestFactory } from '@nestjs/core';
-import {
-  BadRequestException,
-  ValidationError,
-  ValidationPipe,
-} from '@nestjs/common';
 import { I18nValidationPipe, I18nValidationExceptionFilter } from 'nestjs-i18n';
 import { AppModule } from './app.module';
 
@@ -19,24 +14,30 @@ async function bootstrap() {
     credentials: true,
   });
   app.useGlobalPipes(
-    new ValidationPipe({
+    new I18nValidationPipe({
       whitelist: true,
       stopAtFirstError: true,
-      exceptionFactory: (validationErrors: ValidationError[] = []) => {
-        const errors = {};
+      transform: true,
+    }),
+  );
 
-        validationErrors.forEach((error) => {
-          errors[error.property] = Object.values(error?.constraints || {})[0];
+  app.useGlobalFilters(
+    new I18nValidationExceptionFilter({
+      detailedErrors: true,
+      responseBodyFormatter(
+        host,
+        exc,
+        formattedErrors: { constraints: object; property: string }[],
+      ) {
+        const message = {};
+        formattedErrors.forEach((error) => {
+          message[error.property] = Object.values(error?.constraints || {})[0];
         });
 
-        return new BadRequestException({
-          errors,
-        });
+        return { message };
       },
     }),
   );
-  app.useGlobalPipes(new I18nValidationPipe());
-  app.useGlobalFilters(new I18nValidationExceptionFilter());
   await app.listen(process.env.PORT ?? 3000);
 }
 

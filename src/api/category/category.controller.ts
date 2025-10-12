@@ -10,7 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
-import type { Request, Response } from 'express';
+import type { Request } from 'express';
 import { Category, User } from '@/lib/types';
 import { MAX_CATEGORY_COUNT } from '@/lib/constant';
 import { getPagination, slugger } from '@/lib/utils';

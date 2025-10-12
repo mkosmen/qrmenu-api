@@ -36,3 +36,21 @@ export interface Product {
   userId: ObjectId;
   active: boolean;
 }
+
+export enum DiscountEnum {
+  COMMON = 'common',
+  PRODUCT = 'product',
+}
+export interface Discount {
+  _id?: ObjectId;
+  userId: ObjectId;
+  code?: string;
+  percentage?: number;
+  price?: number;
+  min_basket_price?: number;
+  discount_type: DiscountEnum;
+  materialId?: ObjectId;
+  started_at: Date;
+  finished_at: Date;
+  active?: boolean;
+}

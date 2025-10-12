@@ -11,6 +11,7 @@ import { UsersModule } from './api/users/users.module';
 import { CompanyModule } from './api/company/company.module';
 import { CategoryModule } from './api/category/category.module';
 import { ProductModule } from './api/product/product.module';
+import { DiscountModule } from './api/discount/discount.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ProductModule } from './api/product/product.module';
     CompanyModule,
     CategoryModule,
     ProductModule,
+    DiscountModule,
   ],
 })
 export class AppModule implements NestModule {

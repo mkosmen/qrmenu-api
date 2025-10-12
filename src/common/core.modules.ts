@@ -17,7 +17,7 @@ import { MongoDbModule } from '@/common/mongo/mongodb.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     I18nModule.forRoot({
-      fallbackLanguage: 'en',
+      fallbackLanguage: 'tr',
       loaderOptions: {
         path: path.join(__dirname, '../i18n/'),
         watch: true,

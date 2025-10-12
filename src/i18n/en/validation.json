@@ -1,0 +1,9 @@
+{
+  "isEnumX": "Yalnızca bu değerleri alabilir: {values}",
+  "isNumber": "Sayı olmalıdır",
+  "min": "En az {constraints.0} olmalıdır",
+  "max": "En fazla {constraints.0} olmalıdır",
+  "minLength": "En az {constraints.0} karakterden oluşmalıdır",
+  "maxLength": "En fazla {constraints.0} karakterden oluşabilir",
+  "isString": "Dize olmalıdır"
+}
