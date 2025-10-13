@@ -12,6 +12,7 @@ import { CompanyModule } from './api/company/company.module';
 import { CategoryModule } from './api/category/category.module';
 import { ProductModule } from './api/product/product.module';
 import { DiscountModule } from './api/discount/discount.module';
+import { PricingModule } from './api/pricing/pricing.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { DiscountModule } from './api/discount/discount.module';
     CategoryModule,
     ProductModule,
     DiscountModule,
+    PricingModule,
   ],
 })
 export class AppModule implements NestModule {

@@ -21,6 +21,7 @@ export class AuthMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     const xToken = <string | undefined>req.headers['x-token'];
+    console.log('xToken', xToken);
     if (!xToken) {
       throw new UnauthorizedException();
     }
