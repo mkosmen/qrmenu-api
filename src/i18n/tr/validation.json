@@ -4,7 +4,12 @@
   "max": "En fazla {constraints.0} olmalıdır",
   "minLength": "En az {constraints.0} karakterden oluşmalıdır",
   "maxLength": "En fazla {constraints.0} karakterden oluşabilir",
+  "length": "En az {constraints.0} en fazla {constraints.1} karakterden oluşabilir",
   "isString": "Dize olmalıdır",
   "isDate": "Geçerli bir tarih olmalıdır",
-  "isNotEmpty": "Bu değer boş olamaz"
+  "isNotEmpty": "Bu değer boş olamaz",
+  "isBoolean": "Boolean(true/false) olmalıdır",
+  "matches": "Geçerli bir içerik değil",
+  "isMongoId": "MongoDB ObjectId'si olmalıdır",
+  "isNumber": "Belirtilen kısıtlamalara uygun bir sayı olmalıdır"
 }

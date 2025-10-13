@@ -7,8 +7,10 @@ import {
 import { DiscountController } from './discount.controller';
 import { DiscountService } from './discount.service';
 import { DiscountMiddleware } from '@/common/middleware/discount.middleware';
+import { ProductModule } from '../product/product.module';
 
 @Module({
+  imports: [ProductModule],
   controllers: [DiscountController],
   providers: [DiscountService],
 })

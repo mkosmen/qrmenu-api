@@ -4,7 +4,7 @@ export const MAX_COMPANY_COUNT = 10;
 export const MAX_CATEGORY_COUNT = 250;
 export const MAX_PRODUCT_COUNT = 500;
 export const MAX_DISCOUNT_COUNT = 20;
-export const MAX_ACTIVE_DISCOUNT_COUNT = 5;
+export const MAX_ACTIVE_DISCOUNT_COUNT = 3;
 export const COLLECTIONS = {
   USERS: 'users',
   COMPANIES: 'companies',

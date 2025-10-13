@@ -1,8 +1,10 @@
 {
-  "discount_type": "İndirim Tipi",
-  "discount_type_enum": {
-    "common": "Genel",
-    "product": "Ürün Bazlı"
-  },
-  "min_basket_price": "En Az Sepet Tutarı"
+  "discount": {
+    "type": "İndirim Tipi",
+    "code": "İndirim Kodu",
+    "types": {
+      "common": "Genel",
+      "product": "Ürün Bazlı"
+    }
+  }
 }

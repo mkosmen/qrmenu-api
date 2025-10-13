@@ -1,31 +1,31 @@
 import { IsEnumX } from '@/common/decorators/IsEnumX.validator';
 import { DiscountEnum } from '@/lib/types';
 import {
+  IsBoolean,
   IsDate,
-  IsNotEmpty,
+  IsMongoId,
   IsNumber,
   IsOptional,
   IsString,
+  Length,
+  Matches,
   Max,
-  MaxLength,
   Min,
-  MinLength,
+  ValidateIf,
 } from 'class-validator';
 import { ObjectId } from 'mongodb';
 import { i18nValidationMessage } from 'nestjs-i18n';
 
 export default class CommonDiscountDto {
   @IsOptional()
-  @MaxLength(31, {
-    message: i18nValidationMessage('validation.maxLength'),
-  })
-  @MinLength(1, {
-    message: i18nValidationMessage('validation.minLength'),
+  @Matches(/^[^\s]+$/)
+  @Length(1, 31, {
+    message: i18nValidationMessage('validation.length'),
   })
   @IsString({
     message: 'validation.isString',
   })
-  code: string;
+  code?: string;
 
   @IsOptional()
   @Max(100, {
@@ -34,44 +34,79 @@ export default class CommonDiscountDto {
   @Min(0, {
     message: i18nValidationMessage('validation.min'),
   })
-  @IsNumber()
-  percentage: number;
+  @IsNumber(
+    {
+      maxDecimalPlaces: 2,
+    },
+    {
+      message: i18nValidationMessage('validation.isNumber'),
+    },
+  )
+  percentage?: number;
 
   @IsOptional()
   @Min(0, {
     message: i18nValidationMessage('validation.min'),
   })
-  @IsNumber()
-  price: number;
+  @IsNumber(
+    {
+      maxDecimalPlaces: 2,
+    },
+    {
+      message: i18nValidationMessage('validation.isNumber'),
+    },
+  )
+  price?: number;
 
+  @IsOptional()
   @Min(0, {
     message: i18nValidationMessage('validation.min'),
   })
-  @IsNumber()
-  min_basket_price: number;
+  @IsNumber(
+    {
+      maxDecimalPlaces: 2,
+    },
+    {
+      message: i18nValidationMessage('validation.isNumber'),
+    },
+  )
+  min_basket_price?: number;
 
-  @IsEnumX(DiscountEnum)
-  @IsNotEmpty()
-  discount_type: string;
+  @IsEnumX(DiscountEnum, { i18nKey: 'discount.types' })
+  type: DiscountEnum;
 
   @IsOptional()
-  @IsString({
-    message: 'validation.isString',
+  @ValidateIf((d: CommonDiscountDto) => d.type === DiscountEnum.PRODUCT)
+  @IsMongoId({
+    message: 'validation.isMongoId',
   })
-  material_id: ObjectId;
+  material_id?: ObjectId | null;
 
   @IsOptional()
   @IsDate({
     message: 'validation.isDate',
   })
-  started_at: Date;
+  started_at?: Date;
 
   @IsOptional()
   @IsDate({
     message: 'validation.isDate',
   })
-  finished_at: Date;
+  finished_at?: Date;
 
   @IsOptional()
-  active: boolean;
+  @IsBoolean({ message: i18nValidationMessage('validation.isBoolean') })
+  active?: boolean;
+
+  @IsOptional()
+  @Min(0, {
+    message: i18nValidationMessage('validation.min'),
+  })
+  @IsNumber(
+    {},
+    {
+      message: i18nValidationMessage('validation.isNumber'),
+    },
+  )
+  max_use_count?: number;
 }

@@ -5,7 +5,13 @@ import {
 } from 'class-validator';
 import { I18nContext } from 'nestjs-i18n';
 
-export function IsEnumX(val: any, validationOptions?: ValidationOptions) {
+export function IsEnumX(
+  val: any,
+  options?: {
+    i18nKey?: string;
+    validationOptions?: ValidationOptions;
+  },
+) {
   return (object: object, propertyName: string) => {
     return registerDecorator({
       name: 'isEnumX',
@@ -13,7 +19,7 @@ export function IsEnumX(val: any, validationOptions?: ValidationOptions) {
       propertyName,
       constraints: [val],
       options: {
-        ...validationOptions,
+        ...options?.validationOptions,
         message(args) {
           let values = '';
           const {
@@ -26,7 +32,13 @@ export function IsEnumX(val: any, validationOptions?: ValidationOptions) {
             values = item.join(',');
           } else {
             values = Object.values(<object>item)
-              .map((f) => i18n.t(`property.${property}_enum.${f}`))
+              .map((f) =>
+                i18n.t(
+                  options?.i18nKey
+                    ? `property.${options?.i18nKey}.${f}`
+                    : `property.${property}_enum.${f}`,
+                ),
+              )
               .join(', ');
           }
 

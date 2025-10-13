@@ -32,7 +32,7 @@ export class CategoryController {
     );
     if (totalCategoryCount >= MAX_CATEGORY_COUNT) {
       throw new BadRequestException({
-        message: this.i18n.t('custom.exception.max_count', {
+        message: this.i18n.t('exceptions.max_count', {
           args: {
             prop: this.i18n.t('custom.category'),
             count: MAX_CATEGORY_COUNT,
@@ -50,7 +50,7 @@ export class CategoryController {
 
     if (hasAny) {
       throw new ConflictException({
-        message: this.i18n.t('custom.exception.exists', {
+        message: this.i18n.t('exceptions.exists', {
           args: {
             prop: this.i18n.t('custom.category'),
           },
@@ -120,7 +120,6 @@ export class CategoryController {
 
     const { acknowledged } = await this.categoryService.update(category._id!, {
       ...dto,
-      active: Boolean(dto.active),
       slug,
     });
 

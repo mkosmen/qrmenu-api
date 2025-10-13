@@ -48,9 +48,9 @@ export interface Discount {
   percentage?: number;
   price?: number;
   min_basket_price?: number;
-  discount_type: DiscountEnum;
+  type: DiscountEnum;
   materialId?: ObjectId;
-  started_at: Date;
-  finished_at: Date;
+  started_at?: Date;
+  finished_at?: Date;
   active?: boolean;
 }

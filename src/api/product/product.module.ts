@@ -13,6 +13,7 @@ import { ProductMiddleware } from '@/common/middleware/product.middleware';
   imports: [CategoryModule],
   controllers: [ProductController],
   providers: [ProductService],
+  exports: [ProductService],
 })
 export class ProductModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

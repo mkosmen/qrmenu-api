@@ -35,7 +35,7 @@ export class ProductController {
     const totalProductCount = await this.productService.getOwnCount(user._id!);
     if (totalProductCount >= MAX_PRODUCT_COUNT) {
       throw new BadRequestException({
-        message: this.i18n.t('custom.exceptions.max_count', {
+        message: this.i18n.t('exceptions.max_count', {
           args: {
             prop: this.i18n.t('custom.category'),
             count: MAX_PRODUCT_COUNT,
@@ -50,7 +50,7 @@ export class ProductController {
 
     if (!result) {
       throw new NotFoundException({
-        message: this.i18n.t('custom.exceptions.not_found', {
+        message: this.i18n.t('exceptions.not_found', {
           args: { prop: this.i18n.t('custom.category') },
         }),
       });
@@ -70,7 +70,7 @@ export class ProductController {
 
     if (hasAny) {
       throw new ConflictException({
-        message: this.i18n.t('custom.exceptions.exists', {
+        message: this.i18n.t('exceptions.exists', {
           args: { prop: this.i18n.t('custom.product') },
         }),
       });
@@ -82,7 +82,7 @@ export class ProductController {
       return new ObjectId(String(categoryId));
     } catch {
       throw new NotFoundException({
-        message: this.i18n.t('custom.exceptions.not_found', {
+        message: this.i18n.t('exceptions.not_found', {
           args: { prop: this.i18n.t('custom.category') },
         }),
       });

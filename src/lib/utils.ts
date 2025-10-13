@@ -42,8 +42,8 @@ export function slugger(str: string) {
 }
 
 export function getPagination({
-  page,
-  limit,
+  page = PAGINATION.PAGE,
+  limit = PAGINATION.LIMIT,
   total,
 }: {
   page?: number;
@@ -57,4 +57,8 @@ export function getPagination({
   const maxPage = Math.ceil(total / _limit);
 
   return { page: _page, limit: _limit, maxPage };
+}
+
+export function simpleCopy<T extends object>(obj: object): T {
+  return <T>JSON.parse(JSON.stringify(obj));
 }

@@ -38,7 +38,7 @@ export class AuthController {
       res.status(HttpStatus.UNAUTHORIZED);
 
       return {
-        message: this.i18n.t('custom.exception.not_found', {
+        message: this.i18n.t('exceptions.not_found', {
           args: {
             prop: this.i18n.t('custom.user'),
           },
