@@ -1,7 +1,6 @@
 import { IsEnumX } from '@/common/decorators/IsEnumX.validator';
 import { DiscountEnum } from '@/lib/types';
 import {
-  IsBoolean,
   IsDate,
   IsNotEmpty,
   IsNumber,
