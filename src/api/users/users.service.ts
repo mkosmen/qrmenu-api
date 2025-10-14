@@ -1,4 +1,4 @@
-import SignUpDto from '@/dto/SignUpDto';
+import SignUpDto from '@/api/auth/dto/SignUpDto';
 import { User } from '@/lib/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { COLLECTIONS, MONGODB_PROVIDER } from '@/lib/constant';

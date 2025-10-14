@@ -28,12 +28,12 @@ async function bootstrap() {
         exc,
         formattedErrors: { constraints: object; property: string }[],
       ) {
-        const message = {};
+        const messages = {};
         formattedErrors.forEach((error) => {
-          message[error.property] = Object.values(error?.constraints || {})[0];
+          messages[error.property] = Object.values(error?.constraints);
         });
 
-        return { message };
+        return { status: false, messages };
       },
     }),
   );

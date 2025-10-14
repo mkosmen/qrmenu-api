@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { User } from '@/lib/types';
 import { decrypt, encrypt } from '@/lib/utils';
-import SignInDto from '@/dto/SignInDto';
-import SignUpDto from '@/dto/SignUpDto';
+import SignInDto from '@/api/auth/dto/SignInDto';
+import SignUpDto from '@/api/auth/dto/SignUpDto';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -35,9 +35,9 @@ export class AuthService {
     if (user) {
       return {
         status: false,
-        message: this.i18n.t('custom.signup.exists', {
+        message: this.i18n.t('exceptions.exists', {
           args: {
-            prop: this.i18n.t('custom.user'),
+            prop: this.i18n.t('custom.email'),
           },
         }),
       };

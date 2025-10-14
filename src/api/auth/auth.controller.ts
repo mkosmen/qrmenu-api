@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
-import SignInDto from '@/dto/SignInDto';
-import SignUpDto from '@/dto/SignUpDto';
+import SignInDto from './dto/SignInDto';
+import SignUpDto from './dto/SignUpDto';
 import { I18nService } from 'nestjs-i18n';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { JwtService } from '@nestjs/jwt';
@@ -65,7 +65,8 @@ export class AuthController {
     const result = await this.authService.signup(body);
 
     if (!result.status) {
-      res.status(HttpStatus.BAD_REQUEST);
+      res.status(HttpStatus.BAD_REQUEST).json(result);
+      return;
     }
 
     return result;

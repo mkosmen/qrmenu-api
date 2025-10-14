@@ -1,7 +1,6 @@
 {
-  "exists": "Bu {prop} adını zaten kullanıyorsunuz",
-  "using": "Bu {prop} kullanılıyor. Lütfen farklı bir {prop} tercih edin",
+  "exists": "{prop} kullanılıyor",
   "not_found": "{prop} kaydı bulunamadı",
-  "max_count": "En fazla {count} adet {prop} ekleyebilirsiniz. Yeterli sayıya ulaştınız",
-  "max_active_count": "En fazla {count} adet {prop} aktif olarak kullanılabilir. Yeterli sayıya ulaştınız"
+  "max_count": "En fazla {count} adet {prop} eklenebilir",
+  "max_active_count": "En fazla {count} adet {prop} aktif olarak kullanılabilir"
 }

@@ -76,7 +76,7 @@ export class DiscountController {
 
     if (hasCode) {
       throw new BadRequestException({
-        message: this.i18n.t('exceptions.using', {
+        message: this.i18n.t('exceptions.exists', {
           args: {
             prop: this.i18n.t('property.discount.code'),
           },
