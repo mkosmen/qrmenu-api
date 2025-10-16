@@ -86,14 +86,4 @@ export class AuthController {
 
     return result;
   }
-
-  @Get('me')
-  me(@Req() req: Request) {
-    const user = <User>req['user'];
-
-    delete user._id;
-    delete user.password;
-
-    return user;
-  }
 }
