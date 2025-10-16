@@ -7,7 +7,7 @@ import {
 import { AuthMiddleware } from './common/middleware/auth.middleware';
 import { CoreModules } from './common/core.modules';
 import { AuthModule } from './api/auth/auth.module';
-import { UsersModule } from './api/users/users.module';
+import { UserModule } from './api/user/user.module';
 import { CompanyModule } from './api/company/company.module';
 import { CategoryModule } from './api/category/category.module';
 import { ProductModule } from './api/product/product.module';
@@ -18,7 +18,7 @@ import { PricingModule } from './api/pricing/pricing.module';
   imports: [
     CoreModules,
     AuthModule,
-    UsersModule,
+    UserModule,
     CompanyModule,
     CategoryModule,
     ProductModule,

@@ -5,7 +5,7 @@ import { COLLECTIONS, MONGODB_PROVIDER } from '@/lib/constant';
 import { Db } from 'mongodb';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(@Inject(MONGODB_PROVIDER) private readonly db: Db) {}
 
   async getByEmail(email: string): Promise<User | null> {

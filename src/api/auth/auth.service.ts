@@ -4,17 +4,17 @@ import { User } from '@/lib/types';
 import { decrypt, encrypt } from '@/lib/utils';
 import SignInDto from '@/api/auth/dto/SignInDto';
 import SignUpDto from '@/api/auth/dto/SignUpDto';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly i18n: I18nService,
-    private readonly usersService: UsersService,
+    private readonly userService: UserService,
   ) {}
 
   async signin(dto: SignInDto): Promise<User | null> {
-    const user = await this.usersService.getByEmail(dto.email);
+    const user = await this.userService.getByEmail(dto.email);
 
     if (user) {
       const decryptedPass = decrypt(user.password!);
@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   async signup(dto: SignUpDto): Promise<{ status: boolean; message?: string }> {
-    const user = await this.usersService.getByEmail(dto.email);
+    const user = await this.userService.getByEmail(dto.email);
 
     if (user) {
       return {
@@ -43,7 +43,7 @@ export class AuthService {
       };
     }
 
-    const status = await this.usersService.add({
+    const status = await this.userService.add({
       ...dto,
       password: encrypt(dto.password),
     });

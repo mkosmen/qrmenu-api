@@ -1,4 +1,4 @@
-import { UsersService } from '@/api/users/users.service';
+import { UserService } from '@/api/user/user.service';
 import { decrypt } from '@/lib/utils';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
@@ -15,7 +15,7 @@ import { Request, Response, NextFunction } from 'express';
 export class AuthMiddleware implements NestMiddleware {
   constructor(
     private readonly jwt: JwtService,
-    private readonly usersService: UsersService,
+    private readonly userService: UserService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
@@ -34,7 +34,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     const { email } = await this.jwt.verifyAsync<{ email: string }>(token);
 
-    const user = await this.usersService.getByEmail(email);
+    const user = await this.userService.getByEmail(email);
     if (!user) {
       throw new UnauthorizedException();
     }
