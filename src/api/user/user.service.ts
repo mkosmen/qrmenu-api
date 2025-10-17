@@ -2,7 +2,7 @@ import SignUpDto from '@/api/auth/dto/SignUpDto';
 import { User } from '@/lib/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { COLLECTIONS, MONGODB_PROVIDER } from '@/lib/constant';
-import { Db } from 'mongodb';
+import { Db, ObjectId } from 'mongodb';
 
 @Injectable()
 export class UserService {
@@ -19,6 +19,23 @@ export class UserService {
         .insertOne(userDto);
 
       return acknowledged;
+    } catch {
+      return false;
+    }
+  }
+
+  async update(_id: ObjectId, dto: any): Promise<boolean> {
+    try {
+      const result = await this.db.collection(COLLECTIONS.USERS).updateOne(
+        {
+          _id,
+        },
+        {
+          $set: dto,
+        },
+      );
+
+      return result.acknowledged;
     } catch {
       return false;
     }

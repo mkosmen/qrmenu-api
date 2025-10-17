@@ -33,7 +33,10 @@ import { MongoDbModule } from '@/common/mongo/mongodb.module';
         return {
           stores: [
             new Keyv({
-              store: new CacheableMemory({ ttl: '1h', lruSize: 5000 }),
+              store: new CacheableMemory({
+                ttl: 1000 * 60 * 60,
+                lruSize: 5000,
+              }),
             }),
             new KeyvRedis(
               `redis://${process.env.REDIS_HOST!}:${+process.env.REDIS_PORT!}`,
