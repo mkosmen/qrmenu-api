@@ -3,7 +3,7 @@
   "not_found": "{prop} kaydı bulunamadı",
   "max_count": "En fazla {count} adet {prop} eklenebilir",
   "max_active_count": "En fazla {count} adet {prop} aktif olarak kullanılabilir",
-  "invalidPassword": "Geçersiz şifre girişi",
+  "invalidPassword": "Şifre doğrulanamadı",
   "notMatchPasswords": "Şifreler eşleşmiyor",
   "passwordVerifySignNotFound": "Şifre doğrulama anahtarı bulunamadı"
 }

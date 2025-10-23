@@ -17,7 +17,6 @@ import { decrypt } from '@/lib/utils';
 import PasswordVerifyDto from './dto/PasswordVerifyDto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
-import moment from 'moment';
 
 @Controller('user')
 export class UserController {
@@ -32,7 +31,9 @@ export class UserController {
     if (dUserPass !== newPass) {
       throw new BadRequestException({
         status: false,
-        message: this.i18n.t('exceptions.invalidPassword'),
+        messages: {
+          password: [this.i18n.t('exceptions.invalidPassword')],
+        },
       });
     }
   }
