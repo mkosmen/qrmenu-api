@@ -1,7 +1,7 @@
 import { IsString, MaxLength, MinLength } from 'class-validator';
 import { i18nValidationMessage } from 'nestjs-i18n';
 
-export default class SignUpDto {
+export default class UpdatePasswordDto {
   @MaxLength(31, {
     message: i18nValidationMessage('validation.maxLength'),
   })

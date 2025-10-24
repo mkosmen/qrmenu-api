@@ -10,11 +10,12 @@ import {
   Req,
 } from '@nestjs/common';
 import { User } from '@/lib/types';
-import UpdateMeDto from './dto/UpdateMeDto';
 import { I18nService } from 'nestjs-i18n';
 import { UserService } from './user.service';
-import { decrypt } from '@/lib/utils';
+import { decrypt, encrypt } from '@/lib/utils';
+import UpdateMeDto from './dto/UpdateMeDto';
 import PasswordVerifyDto from './dto/PasswordVerifyDto';
+import UpdatePasswordDto from './dto/UpdatePasswordDto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
 
@@ -42,20 +43,7 @@ export class UserController {
     return `${user.email}_PWD_VERIFY`;
   }
 
-  @Get('me')
-  getMe(@Req() req: Request) {
-    const user = <User>req['user'];
-
-    delete user._id;
-    delete user.password;
-
-    return user;
-  }
-
-  @Put('me')
-  async updateMe(@Req() req: Request, @Body() dto: UpdateMeDto) {
-    const user = <User>req['user'];
-
+  async checkSignedTime(user: User) {
     const signedTime = await this.cacheManager.get<string>(
       this.getUserPasswordVerifyKey(user),
     );
@@ -68,10 +56,22 @@ export class UserController {
     }
 
     await this.cacheManager.del(this.getUserPasswordVerifyKey(user));
+  }
 
-    const result = await this.userService.update(user._id!, dto);
+  async updateUserByDto(req: Request, dto: any) {
+    const user = <User>req['user'];
+    await this.checkSignedTime(user);
+    return await this.userService.update(user._id!, dto);
+  }
 
-    return result;
+  @Get('me')
+  getMe(@Req() req: Request) {
+    const user = <User>req['user'];
+
+    delete user._id;
+    delete user.password;
+
+    return user;
   }
 
   @Post('password/verify')
@@ -87,5 +87,17 @@ export class UserController {
     );
 
     return true;
+  }
+
+  @Put('me')
+  async updateMe(@Req() req: Request, @Body() dto: UpdateMeDto) {
+    return await this.updateUserByDto(req, dto);
+  }
+
+  @Put('password/reset')
+  async passwordReset(@Req() req: Request, @Body() dto: UpdatePasswordDto) {
+    return await this.updateUserByDto(req, {
+      password: encrypt(dto.newPassword),
+    });
   }
 }
