@@ -22,5 +22,5 @@ export default class UpdatePasswordDto {
   @IsString({
     message: i18nValidationMessage('validation.isString'),
   })
-  newPassword2: string;
+  newPasswordAgain: string;
 }
