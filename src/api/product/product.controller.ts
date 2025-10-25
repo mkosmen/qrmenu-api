@@ -115,7 +115,7 @@ export class ProductController {
     return result.insertedId;
   }
 
-  @Get('all')
+  @Get()
   async findAll(
     @Req() req: Request,
     @Query() query: { page?: number; limit?: number },

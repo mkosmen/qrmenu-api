@@ -79,7 +79,7 @@ export class CompanyController {
     };
   }
 
-  @Get('all')
+  @Get()
   async findAll(@Req() req: Request) {
     const user = <User>req.user;
 

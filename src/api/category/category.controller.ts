@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Patch,
+  Put,
   Post,
   Req,
   Query,
@@ -80,7 +81,7 @@ export class CategoryController {
     };
   }
 
-  @Get('all')
+  @Get()
   async findAll(
     @Req() req: Request,
     @Query() query: { page?: number; limit?: number },
@@ -110,7 +111,7 @@ export class CategoryController {
     return <Category>req['category'];
   }
 
-  @Patch(':id')
+  @Put(':id')
   async update(@Req() req: Request, @Body() dto: UpdateCategoryDto) {
     const user = <User>req.user;
     const category = <Category>req['category'];

@@ -134,7 +134,7 @@ export class DiscountController {
     };
   }
 
-  @Get('all')
+  @Get()
   async findAll(
     @Req() req: Request,
     @Query() query: { page?: number; limit?: number },
