@@ -5,7 +5,7 @@ import {
   Controller,
   Delete,
   Get,
-  Patch,
+  Put,
   Post,
   Req,
 } from '@nestjs/common';
@@ -91,7 +91,7 @@ export class CompanyController {
     return <Company>req['company'];
   }
 
-  @Patch(':id')
+  @Put(':id')
   async update(@Req() req: Request, @Body() dto: UpdateCompanyDto) {
     const user = <User>req.user;
     const company = <Company>req['company'];
