@@ -124,7 +124,7 @@ export class ProductController {
     const user = <User>req.user;
 
     const total = await this.productService.totalCount(user._id!);
-    const { maxPage, ...pagination } = getPagination({ ...query, total });
+    const pagination = getPagination({ ...query, total });
 
     const products = await this.productService.findAll({
       userId: user._id!,
@@ -136,7 +136,6 @@ export class ProductController {
       pagination: {
         ...pagination,
         total,
-        maxPage,
       },
     };
   }

@@ -89,7 +89,7 @@ export class CategoryController {
     const user = <User>req.user;
 
     const total = await this.categoryService.totalCount(user._id!);
-    const { maxPage, ...pagination } = getPagination({ ...query, total });
+    const pagination = getPagination({ ...query, total });
 
     const categories = await this.categoryService.findAll({
       userId: user._id!,
@@ -101,7 +101,6 @@ export class CategoryController {
       pagination: {
         ...pagination,
         total,
-        maxPage,
       },
     };
   }

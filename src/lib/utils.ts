@@ -53,7 +53,7 @@ export function getPagination({
   let _limit = Math.abs(Number(limit));
   _limit = _limit < 1 ? PAGINATION.LIMIT : _limit;
 
-  const _page = Math.abs(Number(page));
+  const _page = Math.abs(Number(page)) || 1;
   const maxPage = Math.ceil(total / _limit);
 
   return { page: _page, limit: _limit, maxPage };
