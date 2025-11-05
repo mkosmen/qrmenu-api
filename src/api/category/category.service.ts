@@ -67,6 +67,26 @@ export class CategoryService {
       .toArray();
   }
 
+  async getAll({
+    userId,
+    onlyActive,
+  }: {
+    userId: ObjectId;
+    onlyActive?: boolean;
+  }) {
+    return await this.db
+      .collection<Category[]>(COLLECTIONS.CATEGORIES)
+      .find(onlyActive ? { userId, active: true } : { userId }, {
+        projection: {
+          name: 1,
+          slug: 1,
+          active: 1,
+        },
+      })
+      .sort('name', 'desc')
+      .toArray();
+  }
+
   async find(props: { userId: ObjectId; _id: ObjectId }) {
     return await this.db
       .collection<Category>(COLLECTIONS.CATEGORIES)

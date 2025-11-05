@@ -120,7 +120,6 @@ export class ProductController {
     @Req() req: Request,
     @Query() query: { page?: number; limit?: number },
   ) {
-    console.log('GELDİM');
     const user = <User>req.user;
 
     const total = await this.productService.totalCount(user._id!);

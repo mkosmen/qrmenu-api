@@ -105,6 +105,18 @@ export class CategoryController {
     };
   }
 
+  @Get('all')
+  async getAll(@Req() req: Request, @Query() query: { view?: 'active' }) {
+    const user = <User>req.user;
+
+    const categories = await this.categoryService.getAll({
+      userId: user._id!,
+      onlyActive: query.view === 'active',
+    });
+
+    return categories;
+  }
+
   @Get(':id')
   find(@Req() req: Request) {
     return <Category>req['category'];
