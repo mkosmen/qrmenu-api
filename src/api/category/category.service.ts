@@ -2,6 +2,7 @@ import { Db, ObjectId } from 'mongodb';
 import { COLLECTIONS, MONGODB_PROVIDER, PAGINATION } from '@/lib/constant';
 import { Inject, Injectable } from '@nestjs/common';
 import { Category } from '@/lib/types';
+import { now } from '@/lib/utils';
 
 @Injectable()
 export class CategoryService {
@@ -10,7 +11,10 @@ export class CategoryService {
   async create(category: Category) {
     return await this.db
       .collection<Category>(COLLECTIONS.CATEGORIES)
-      .insertOne(category);
+      .insertOne({
+        ...category,
+        created_at: now(),
+      });
   }
 
   async hasAny({
@@ -59,6 +63,7 @@ export class CategoryService {
           skip: (page - 1) * limit,
         },
       )
+      .sort('created_at', 'desc')
       .toArray();
   }
 
@@ -80,7 +85,7 @@ export class CategoryService {
         _id,
       },
       {
-        $set: category,
+        $set: { ...category, updated_at: now() },
       },
     );
   }

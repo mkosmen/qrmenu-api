@@ -1,6 +1,7 @@
 import {
   IsBoolean,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -11,7 +12,7 @@ export default class CommonCategoryDto {
   @MaxLength(63, {
     message: i18nValidationMessage('validation.maxLength'),
   })
-  @MinLength(5, {
+  @MinLength(3, {
     message: i18nValidationMessage('validation.minLength'),
   })
   @IsString({
@@ -22,6 +23,7 @@ export default class CommonCategoryDto {
   })
   name: string;
 
-  @IsBoolean()
-  active: boolean;
+  @IsOptional()
+  @IsBoolean({ message: i18nValidationMessage('validation.isBoolean') })
+  active?: boolean;
 }

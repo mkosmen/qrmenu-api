@@ -62,3 +62,5 @@ export function getPagination({
 export function simpleCopy<T extends object>(obj: object): T {
   return <T>JSON.parse(JSON.stringify(obj));
 }
+
+export const now = () => new Date();
